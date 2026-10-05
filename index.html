@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="robots" content="noindex, nofollow">
+<title>Coaching progress tracker - draft</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%232D6A4F'/><path d='M14 44l12-12 8 8 16-18' fill='none' stroke='white' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="title">
+    <h1>Coaching progress tracker</h1>
+    <p>A working draft for your Upwork post, by James. Try a check-in, then open the coach dashboard.</p>
+  </div>
+  <div class="tools">
+    <div class="swatches" role="radiogroup" aria-label="Brand color">
+      <span>Your brand color</span>
+      <button role="radio" aria-checked="true" data-brand="#2D6A4F" data-soft="#D8F3DC" style="--c:#2D6A4F" aria-label="Forest"></button>
+      <button role="radio" aria-checked="false" data-brand="#C2410C" data-soft="#FFEDD5" style="--c:#C2410C" aria-label="Ember"></button>
+      <button role="radio" aria-checked="false" data-brand="#1D4E89" data-soft="#DBEAFE" style="--c:#1D4E89" aria-label="Navy"></button>
+      <button role="radio" aria-checked="false" data-brand="#7A3E9D" data-soft="#F3E8FF" style="--c:#7A3E9D" aria-label="Plum"></button>
+    </div>
+    <a class="dl" href="/coaching-tracker-template.xlsx" download>Download the template</a>
+  </div>
+</header>
+
+<main>
+  <!-- CHECK-IN -->
+  <section id="checkin" class="view">
+    <div class="split">
+      <div class="phonecol">
+        <div class="phone">
+          <div class="screen">
+            <div class="formhead"><b>Weekly check-in</b><span>Maria, week of <span id="fdate"></span></span></div>
+            <form id="form" novalidate>
+              <label class="q"><span>Weight (kg)</span>
+                <div class="stepper"><button type="button" data-step="-0.1" aria-label="Lower weight">−</button><input id="f-weight" inputmode="decimal" value="79.8"><button type="button" data-step="0.1" aria-label="Raise weight">+</button></div>
+              </label>
+              <div class="q"><span>Workouts this week</span><div class="chips" id="f-workouts" role="radiogroup" aria-label="Workouts this week"></div></div>
+              <label class="q"><span>Average daily steps</span><input id="f-steps" inputmode="numeric" value="9000" class="big"></label>
+              <div class="q"><span>How's your energy?</span><div class="faces" id="f-energy" role="radiogroup" aria-label="Energy"></div></div>
+              <div class="q"><span>Nutrition on track?</span><div class="yn" id="f-nutri" role="radiogroup" aria-label="Nutrition on track"><button type="button" role="radio" aria-checked="true" data-v="Yes">Yes</button><button type="button" role="radio" aria-checked="false" data-v="No">No</button></div></div>
+              <label class="q"><span>Anything to tell your coach?</span><textarea id="f-notes" rows="2" placeholder="Optional"></textarea></label>
+              <button class="send" type="submit">Send check-in</button>
+              <p class="sent" id="sent" role="status" hidden>Check-in sent. Your coach can see it now.</p>
+            </form>
+          </div>
+        </div>
+        <p class="cap">What a client sees on their phone. Big buttons, no spreadsheet cells.</p>
+      </div>
+      <div class="sheetcol">
+        <div class="sheetlabel">Maria's private sheet, Check-in tab. New check-ins land here.</div>
+        <div class="grid" id="loggrid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRESS -->
+  <section id="progress" class="view" hidden>
+    <div class="split even">
+      <div>
+        <div class="sheetlabel">Maria's sheet, My progress tab. Fills itself in.</div>
+        <div class="grid" id="statgrid"></div>
+      </div>
+      <div class="charts">
+        <figure><figcaption>Weight (kg)</figcaption><svg id="c-weight" viewBox="0 0 520 210" role="img" aria-label="Weight over time"></svg></figure>
+        <figure><figcaption>Workouts per week</figcaption><svg id="c-work" viewBox="0 0 520 170" role="img" aria-label="Workouts per week"></svg></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="dash" class="view" hidden>
+    <div class="dashbar">
+      <div class="filters" role="group" aria-label="Show">
+        <button aria-pressed="true" data-f="all">All clients</button>
+        <button aria-pressed="false" data-f="Needs attention">Needs attention</button>
+        <button aria-pressed="false" data-f="Missed check-in">Missed check-in</button>
+      </div>
+      <p id="dashsum"></p>
+    </div>
+    <div class="grid" id="dashgrid"></div>
+    <p class="rules">Status rules: missed check-in after 10 days. Needs attention if nutrition is under 60%, fewer than 2 workouts a week, or weight is moving away from the goal. You set the rules.</p>
+  </section>
+
+  <!-- HOW -->
+  <section id="how" class="view" hidden>
+    <div class="how">
+      <h2>How it fits together</h2>
+      <ol class="flow">
+        <li><b>Client checks in</b><span>A simple form on their phone, or straight into their sheet if they prefer.</span></li>
+        <li><b>Their private sheet updates</b><span>Each client has their own copy, so no one sees anyone else's numbers.</span></li>
+        <li><b>Your dashboard pulls from everyone</b><span>One screen, colored by status, sorted by who needs you most.</span></li>
+      </ol>
+      <h2>Why one sheet per client</h2>
+      <p>In Google Sheets, protecting a tab only stops edits. It doesn't hide the data. Put every client in one shared file and each of them can see the others' weight and notes. Separate sheets keep everyone private, and your dashboard still sees them all.</p>
+      <h2>Adding a client takes one click</h2>
+      <p>A "Coaching" menu in your dashboard creates a new client sheet from the template, shares it with their email, and adds them to your dashboard.</p>
+      <h2>What I'd need from you</h2>
+      <ul>
+        <li>Your brand colors and logo</li>
+        <li>The metrics you track, if different from these</li>
+        <li>Roughly how many clients you have</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<nav class="sheettabs" role="tablist" aria-label="Sheets">
+  <button role="tab" aria-selected="true" data-v="checkin">Check-in</button>
+  <button role="tab" aria-selected="false" data-v="progress">My progress</button>
+  <button role="tab" aria-selected="false" data-v="dash">Coach dashboard</button>
+  <button role="tab" aria-selected="false" data-v="how">How it works</button>
+</nav>
+<script src="app.js"></script>
+</body>
+</html>
